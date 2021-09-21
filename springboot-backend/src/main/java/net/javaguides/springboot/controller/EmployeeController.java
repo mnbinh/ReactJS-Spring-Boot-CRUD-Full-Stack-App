@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.javaguides.springboot.exception.ResourceNotFoundException;
+import net.javaguides.springboot.model.Comments;
 import net.javaguides.springboot.model.Employee;
+import net.javaguides.springboot.repository.CommentRepository;
 import net.javaguides.springboot.repository.EmployeeRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -28,9 +30,14 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
+	@Autowired
+	private CommentRepository commentRepository;
+	
 	// get all employees
 	@GetMapping("/employees")
 	public List<Employee> getAllEmployees(){
+//		commentRepository.findAll();
+//		commentRepository.save(new Comments());
 		return employeeRepository.findAll();
 	}		
 	

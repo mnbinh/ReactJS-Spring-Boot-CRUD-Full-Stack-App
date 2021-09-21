@@ -45,6 +45,7 @@ public class NewsController {
 	public ResponseEntity<News> getNewsById(@PathVariable Long id) {
 		News news = newsRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("News not exist with id :" + id));
+		String userEmail = news.getUser().getEmail();
 		return ResponseEntity.ok(news);
 	}
 	
@@ -55,8 +56,6 @@ public class NewsController {
 		News news = newsRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("News not exist with id :" + id));
 		
-		news.setTitle(newsDetails.getTitle());
-		news.setContent(newsDetails.getContent());
 		
 		News updatedNews = newsRepository.save(news);
 		return ResponseEntity.ok(updatedNews);

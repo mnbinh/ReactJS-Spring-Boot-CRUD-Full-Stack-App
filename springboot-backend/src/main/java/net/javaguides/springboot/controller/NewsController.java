@@ -75,7 +75,9 @@ public class NewsController {
 		if(!StringUtils.isEmpty(photo)) {
 			news.setPhotos(photo);
 		}
-		
+		if(!StringUtils.isEmpty(user)) {
+			news.setUser(userRepository.findById(Long.parseLong(user)).get());
+		}
 		if(!StringUtils.isEmpty(categories)) {
 			Set<Category> cates = new HashSet<Category>();
 			String[] cids = categories.split(",");

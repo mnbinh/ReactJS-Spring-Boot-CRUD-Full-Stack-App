@@ -1,5 +1,6 @@
 package net.javaguides.springboot.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -95,6 +96,7 @@ public class NewsController {
 			}
 			news.setTags(tagsA);
 		}
+		news.setCreatedDate(new Date());
 		return newsRepository.save(news);
 	}
 	

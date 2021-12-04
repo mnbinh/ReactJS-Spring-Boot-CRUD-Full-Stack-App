@@ -4,13 +4,13 @@ import queryString from 'query-string';
 import { isAuth, handleResponse } from './auth';
 
 export const createBlog = (blog, token) => {
-    let createBlogEndpoint;
+    let createBlogEndpoint = `${API}/v1/news`;
 
-    if (isAuth() && isAuth().roles.length > 1) {
-        createBlogEndpoint = `${API}/v1/news`;
-    } else if (isAuth() && isAuth().role === 0) {
-        createBlogEndpoint = `${API}/v1/news`;
-    }
+    // if (isAuth() && isAuth().roles.length > 1) {
+    //     createBlogEndpoint = `${API}/v1/news`;
+    // } else {
+    //     createBlogEndpoint = `${API}/v1/news`;
+    // }
     blog.set('user', isAuth().id);
 
     return fetch(`${createBlogEndpoint}`, {
@@ -33,7 +33,7 @@ export const listBlogsWithCategoriesAndTags = (skip, limit) => {
     //     limit,
     //     skip
     // };
-    return fetch(`${API}/v1/news`, {
+    return fetch(`${API}/v1/news-ok`, {
         method: 'GET',
         headers: {
             Accept: 'application/json',
@@ -42,6 +42,7 @@ export const listBlogsWithCategoriesAndTags = (skip, limit) => {
         // body: JSON.stringify(data)
     })
         .then(response => {
+            console.log("response: " + response);
             return response.json();
         })
         .catch(err => console.log(err));
@@ -74,9 +75,9 @@ export const listRelated = blog => {
 
 export const list = username => {
     let listBlogsEndpoint;
-
+    console.log("username:" +username);
     if (username) {
-        listBlogsEndpoint = `${API}/v1/news-user/${username}`;
+        listBlogsEndpoint = `${API}/v1/news/users/${username}`;
     } else {
         listBlogsEndpoint = `${API}/v1/news`;
     }
@@ -91,16 +92,34 @@ export const list = username => {
 };
 
 export const removeBlog = (slug, token) => {
-    let deleteBlogEndpoint;
+    let deleteBlogEndpoint = `${API}/v1/news/${slug}`;;
 
-    if (isAuth() && isAuth().roles.lenght > 1) {
-        deleteBlogEndpoint = `${API}/v1/news/${slug}`;
-    } else if (isAuth() && isAuth().role === 0) {
-        deleteBlogEndpoint = `${API}/v1/news/${slug}`;
-    }
+    // if (isAuth() && isAuth().roles.lenght > 1) {
+    //     deleteBlogEndpoint = `${API}/v1/news/${slug}`;
+    // } else if (isAuth() && isAuth().role === 0) {
+    //     deleteBlogEndpoint = `${API}/v1/news/${slug}`;
+    // }
 
     return fetch(`${deleteBlogEndpoint}`, {
         method: 'DELETE',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response => {
+            handleResponse(response);
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const activeNew = (id, token) => {
+    let acceptEndpoint = `${API}/v1/news-accept/${id}`;;
+
+    return fetch(`${acceptEndpoint}`, {
+        method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',

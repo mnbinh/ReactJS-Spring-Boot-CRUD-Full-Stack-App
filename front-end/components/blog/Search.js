@@ -16,7 +16,7 @@ const Search = () => {
     const searchSubmit = e => {
         e.preventDefault();
         listSearch({ search }).then(data => {
-            setValues({ ...values, results: data, searched: true, message: `${data.length} blogs found` });
+            setValues({ ...values, results: data, searched: true, message: `${data.length} News found` });
         });
     };
 
@@ -33,7 +33,7 @@ const Search = () => {
                 {results.map((blog, i) => {
                     return (
                         <div key={i}>
-                            <Link href={`/blogs/${blog.slug}`}>
+                            <Link href={`/news/${blog.id}`}>
                                 <a className="text-primary">{blog.title}</a>
                             </Link>
                         </div>
@@ -47,7 +47,7 @@ const Search = () => {
         <form onSubmit={searchSubmit}>
             <div className="row">
                 <div className="col-md-8">
-                    <input type="search" className="form-control" placeholder="Search blogs" onChange={handleChange} />
+                    <input type="search" className="form-control" placeholder="Search news" onChange={handleChange} />
                 </div>
 
                 <div className="col-md-4">

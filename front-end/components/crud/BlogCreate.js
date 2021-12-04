@@ -73,6 +73,7 @@ const CreateBlog = ({ router }) => {
     const publishBlog = e => {
         e.preventDefault();
         // console.log('ready to publishBlog');
+        console.log(formData);
         createBlog(formData, token).then(data => {
             if (data.error) {
                 setValues({ ...values, error: data.error });

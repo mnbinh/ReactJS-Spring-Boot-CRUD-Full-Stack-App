@@ -63,7 +63,7 @@ const Header = () => {
               </React.Fragment>
             )}
 
-            {isAuth() && isAuth().roles.length == 1 && (
+            {isAuth() && isAuth().roles && isAuth().roles.length == 1 && (
               <NavItem>
                 <Link href="/user">
                   <NavLink>{`${isAuth().firstname} ${isAuth().lastname}'s Dashboard`}</NavLink>
@@ -71,7 +71,7 @@ const Header = () => {
               </NavItem>
             )}
 
-            {isAuth() && isAuth().roles.length ==2 && (
+            {isAuth() &&  isAuth().roles && isAuth().roles.length ==2 && (
               <NavItem>
                 <Link href="/admin">
                   <NavLink>{`${isAuth().firstname} ${isAuth().lastname}'s Dashboard`}</NavLink>

@@ -33,8 +33,12 @@ const SigninComponent = () => {
                 // save user token to cookie
                 // save user info to localstorage
                 // authenticate user
+
                 authenticate(data, () => {
-                    if (isAuth() && isAuth().roles.length > 1) {
+                    if(isAuth()  && isAuth().roles == undefined){
+                        setValues({ ...values, error: 'Can not log in', loading: false });
+                    }
+                    else if (isAuth() && isAuth().roles.length > 1) {
                         Router.push(`/admin`);
                     } else {
                         Router.push(`/user`);

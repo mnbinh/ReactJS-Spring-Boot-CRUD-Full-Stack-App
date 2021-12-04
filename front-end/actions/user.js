@@ -3,7 +3,7 @@ import { API } from '../config';
 import { handleResponse } from './auth';
 
 export const userPublicProfile = username => {
-    return fetch(`${API}/user/${username}`, {
+    return fetch(`${API}/v1/user/${username}`, {
         method: 'GET',
         headers: {
             Accept: 'application/json'

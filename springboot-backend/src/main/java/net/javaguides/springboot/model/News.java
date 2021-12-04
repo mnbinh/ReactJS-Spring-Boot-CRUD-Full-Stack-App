@@ -49,6 +49,9 @@ public class News {
     
 	@Column(name = "relate")
 	private String relate;
+	
+	@Column(name = "excerpt")
+	private String excerpt;
     
     @Column(name = "photos", columnDefinition = "TEXT")
     private String photos;
@@ -148,5 +151,15 @@ public class News {
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
+
+	public String getExcerpt() {
+		return excerpt;
+	}
+
+	public void setExcerpt(String excerpt) {
+		this.excerpt = excerpt;
+	}
+	
+	
     
 }

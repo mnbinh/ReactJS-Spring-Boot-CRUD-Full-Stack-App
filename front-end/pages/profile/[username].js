@@ -9,14 +9,14 @@ const UserProfile = ({ user, blogs, query }) => {
     const head = () => (
         <Head>
             <title>
-                {user.username} | {APP_NAME}
+                {user.userName} | {APP_NAME}
             </title>
-            <meta name="description" content={`Blogs by ${user.username}`} />
-            <link rel="canonical" href={`${DOMAIN}/profile/${query.username}`} />
-            <meta property="og:title" content={`${user.username}| ${APP_NAME}`} />
-            <meta property="og:description" content={`Blogs by ${user.username}`} />
+            <meta name="description" content={`Blogs by ${user.userName}`} />
+            <link rel="canonical" href={`${DOMAIN}/profile/${query.userName}`} />
+            <meta property="og:title" content={`${user.userName}| ${APP_NAME}`} />
+            <meta property="og:description" content={`Blogs by ${user.userName}`} />
             <meta property="og:type" content="webiste" />
-            <meta property="og:url" content={`${DOMAIN}/profile/${query.username}`} />
+            <meta property="og:url" content={`${DOMAIN}/profile/${query.userName}`} />
             <meta property="og:site_name" content={`${APP_NAME}`} />
 
             <meta property="og:image" content={`${DOMAIN}/static/images/seoblog.jpg`} />
@@ -30,7 +30,7 @@ const UserProfile = ({ user, blogs, query }) => {
         return blogs.map((blog, i) => {
             return (
                 <div className="mt-4 mb-4" key={i}>
-                    <Link href={`/blogs/${blog.slug}`}>
+                    <Link href={`/news/${blog.id}`}>
                         <a className="lead">{blog.title}</a>
                     </Link>
                 </div>
@@ -42,6 +42,7 @@ const UserProfile = ({ user, blogs, query }) => {
         <React.Fragment>
             {head()}
             <Layout>
+                {/*
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
@@ -54,7 +55,7 @@ const UserProfile = ({ user, blogs, query }) => {
                                         </div>
                                         <div className="col-md-4">
                                             <img
-                                                src={`${API}/user/photo/${user.username}`}
+                                                src={`${API}/user/photo/${user.userName}`}
                                                 className="img img-fluid img-thumbnail mb-3"
                                                 style={{ maxHeight: '100px', maxWidth: '100%' }}
                                                 alt="user profile"
@@ -68,6 +69,7 @@ const UserProfile = ({ user, blogs, query }) => {
                 </div>
 
                 <br />
+                */}
 
                 <div className="container pb-5">
                     <div className="row">
@@ -75,7 +77,7 @@ const UserProfile = ({ user, blogs, query }) => {
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-white">
-                                        Recent blogs by {user.name}
+                                        Recent News by {user.lastName}
                                     </h5>
 
                                     {showUserBlogs()}
@@ -87,10 +89,11 @@ const UserProfile = ({ user, blogs, query }) => {
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light">
-                                        Message {user.name}
+                                        Message {user.lastName}
                                     </h5>
                                     <br />
-                                    <p>contact form</p>
+                                    <textarea style={{width: '100%'}}>
+                                    </textarea>    
                                 </div>
                             </div>
                         </div>
@@ -107,7 +110,7 @@ UserProfile.getInitialProps = ({ query }) => {
         if (data.error) {
             console.log(data.error);
         } else {
-            // console.log(data);
+            console.log(data);
             return { user: data.user, blogs: data.blogs, query };
         }
     });

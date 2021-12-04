@@ -36,7 +36,7 @@ const BlogRead = ({ username }) => {
     };
 
     const deleteConfirm = slug => {
-        let answer = window.confirm('Are you sure you want to delete your blog?');
+        let answer = window.confirm('Are you sure you want to delete your news?');
         if (answer) {
             deleteBlog(slug);
         }
@@ -50,11 +50,20 @@ const BlogRead = ({ username }) => {
                 </Link>
             );
         } else if (isAuth() && isAuth().roles.length == 2) {
-            return (
-                <Link href={`/admin/crud/${blog.id}`}>
-                    <a className="ml-2 btn btn-sm btn-warning">Update</a>
-                </Link>
-            );
+            console.log(blog);
+            if( isAuth().username === blog.user.userName){
+                return (
+                    <Link href={`/admin/crud/${blog.id}`}>
+                        <a className="ml-2 btn btn-sm btn-warning">Update</a>
+                    </Link>
+                );
+            }else if(blog.status != 'OK'){
+                return (
+                    <Link href={`/admin/crud/${blog.id}`}>
+                        <a className="ml-2 btn btn-sm btn-success">Review</a>
+                    </Link>
+                );               
+            }
         }
     };
 
@@ -64,10 +73,10 @@ const BlogRead = ({ username }) => {
                 <div key={i} className="pb-5">
                     <h3>{blog.title}</h3>
                     <p className="mark">
-                        Written by {blog.user.lastName} | Published on {moment(blog.updatedAt).fromNow()}
+                        Written by {blog.user ? blog.user.lastName + blog.user.userName : ''} | Published on {moment(blog.updatedAt).fromNow()}
                     </p>
-                    <button className="btn btn-sm btn-danger" onClick={() => deleteConfirm(blog.slug)}>
-                        Delete
+                    <button className="btn btn-sm btn-danger" onClick={() => deleteConfirm(blog.id)}>
+                        Delete 
                     </button>
                     {showUpdateButton(blog)}
                 </div>

@@ -6,7 +6,7 @@ import { withRouter } from 'next/router';
 import { getCookie, isAuth } from '../../actions/auth';
 import { getCategories } from '../../actions/category';
 import { getTags } from '../../actions/tag';
-import { singleBlog, updateBlog } from '../../actions/blog';
+import { singleBlog, updateBlog, activeNew } from '../../actions/blog';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import '../../node_modules/react-quill/dist/quill.snow.css';
 import { QuillModules, QuillFormats } from '../../helpers/quill';
@@ -16,7 +16,7 @@ const BlogUpdate = ({ router }) => {
 
 
     const [bodyData, setBodyData] = useState('');
-
+    const [blogOwner, setBlogOwner] = useState('');
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
 
@@ -70,6 +70,7 @@ const BlogUpdate = ({ router }) => {
                     setBodyData(data.body);
                     setCategoriesArray(data.categories);
                     setTagsArray(data.tags);
+                    setBlogOwner(data.user.userName)
                 }
             });
         }
@@ -245,6 +246,17 @@ const BlogUpdate = ({ router }) => {
     const editBlog = e => {
         e.preventDefault();
         const user = isAuth().id;
+        if (isAuth() && isAuth().username != blogOwner) {
+            activeNew(router.query.slug, token).then(data => {
+                if(!data){
+                    setValues({ ...values, error: "Something wrong" });
+                }else{
+                    Router.replace(`/admin`);
+                }
+            });
+
+            return;
+        }
         updateBlog({title, body, photo, categories : categoriesData, tags : tagsData, user}, token, router.query.slug).then(data => {
             if (!data) {
                 setValues({ ...values, error: "Something wrong" });
@@ -273,6 +285,22 @@ const BlogUpdate = ({ router }) => {
         </div>
     );
 
+    const showUpdateButton = () => {
+        if (isAuth() && isAuth().username == blogOwner) {
+            return (
+                <button type="submit" className="btn btn-primary">
+                    Update
+                </button>
+            );
+        } else  {
+            return (
+                <button type="submit" className="btn btn-success">
+                    Accept
+                </button>
+            );
+        }
+    };
+
     const updateBlogForm = () => {
         return (
             <form onSubmit={editBlog}>
@@ -292,9 +320,7 @@ const BlogUpdate = ({ router }) => {
                 </div>
 
                 <div>
-                    <button type="submit" className="btn btn-primary">
-                        Update
-                    </button>
+                    {showUpdateButton()}                  
                 </div>
             </form>
         );

@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +30,13 @@ import net.javaguides.springboot.model.Category;
 import net.javaguides.springboot.model.News;
 import net.javaguides.springboot.model.NewsStatus;
 import net.javaguides.springboot.model.Tag;
+import net.javaguides.springboot.model.UserInfo;
 import net.javaguides.springboot.payload.RequestNew;
 import net.javaguides.springboot.repository.CategoriesRepository;
 import net.javaguides.springboot.repository.NewsRepository;
 import net.javaguides.springboot.repository.TagRepository;
 import net.javaguides.springboot.repository.UserRepository;
+import net.javaguides.springboot.util.TextHelper;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -55,7 +59,26 @@ public class NewsController {
 	@GetMapping("/news")
 	public List<News> getAllNews(){
 		return newsRepository.findAll();
-	}		
+	}
+	
+	// get all News
+	@GetMapping("/news-ok")
+	public List<News> getActiveNews(){
+		return newsRepository.findAll()
+				.stream()
+				.filter(n -> n.getStatus() == null ||  n.getStatus().equals(NewsStatus.OK))
+				.collect(Collectors.toList());
+	}
+	
+	// get all News of user
+	@GetMapping("/news/users/{userName}")
+	public List<News> getNewsOfUser(@PathVariable String userName){
+		Optional<UserInfo> user = userRepository.findByUserName(userName);
+		if(user.isPresent()) {
+			return newsRepository.findByUser_Id(user.get().getId());
+		}
+		return null;
+	}
 	
 	// create News rest api
 	@PostMapping("/news")
@@ -72,12 +95,19 @@ public class NewsController {
 		}
 		if(!StringUtils.isEmpty(body)) {
 			news.setBody(body);
+			news.setExcerpt(TextHelper.smartTrim(body, 200, " ", "..."));
 		}
 		if(!StringUtils.isEmpty(photo)) {
 			news.setPhotos(photo);
 		}
 		if(!StringUtils.isEmpty(user)) {
-			news.setUser(userRepository.findById(Long.parseLong(user)).get());
+			UserInfo userI= userRepository.findById(Long.parseLong(user)).get();
+			news.setUser(userI);
+			if (userI.getRoles().size() >1) {
+				news.setStatus(NewsStatus.OK);
+			}else {
+				news.setStatus(NewsStatus.PROCESS);
+			}
 		}
 		if(!StringUtils.isEmpty(categories)) {
 			Set<Category> cates = new HashSet<Category>();
@@ -109,6 +139,18 @@ public class NewsController {
 		return ResponseEntity.ok(news);
 	}
 	
+	// get News by id rest api
+	@PostMapping("/news-accept/{id}")
+	public ResponseEntity<Map<String, Boolean>> activeNew(@PathVariable Long id) {
+		News news = newsRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("News not exist with id :" + id));
+		news.setStatus(NewsStatus.OK);
+		newsRepository.save(news);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
+	
 	// update News rest api
 	
 	@PutMapping("/news/{id}")
@@ -118,6 +160,7 @@ public class NewsController {
 				.orElseThrow(() -> new ResourceNotFoundException("News not exist with id :" + id));
 		news.setTitle(req.getTitle());
 		news.setBody(req.getBody());
+		news.setExcerpt(TextHelper.smartTrim(req.getBody(), 200, " ", "..."));
 		news.setPhotos(req.getPhoto());
 		String categories = req.getCategories();
 		if(!StringUtils.isEmpty(categories)) {
@@ -152,6 +195,15 @@ public class NewsController {
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/news/search")
+	public List<News> searchNews(@RequestParam String search){
+		final String term = search.toLowerCase();
+		return newsRepository.findAll()
+				.stream()
+				.filter(n -> (n.getStatus() == null ||  n.getStatus().equals(NewsStatus.OK)) && ( n.getTitle()!= null && n.getTitle().toLowerCase().contains(term)) )
+				.collect(Collectors.toList());
 	}
 	
 	

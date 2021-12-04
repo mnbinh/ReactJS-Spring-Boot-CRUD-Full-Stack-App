@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
 import net.javaguides.springboot.model.Comments;
 import net.javaguides.springboot.model.Employee;
+import net.javaguides.springboot.model.News;
+import net.javaguides.springboot.model.UserInfo;
 import net.javaguides.springboot.repository.CommentRepository;
 import net.javaguides.springboot.repository.EmployeeRepository;
+import net.javaguides.springboot.repository.NewsRepository;
+import net.javaguides.springboot.repository.UserRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -29,6 +33,12 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private NewsRepository newsRepository;
 	
 	@Autowired
 	private CommentRepository commentRepository;
@@ -48,11 +58,14 @@ public class EmployeeController {
 	}
 	
 	// get employee by id rest api
-	@GetMapping("/employees/{id}")
-	public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-		Employee employee = employeeRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
-		return ResponseEntity.ok(employee);
+	@GetMapping("/user/{id}")
+	public ResponseEntity<Map> getEmployeeById(@PathVariable Long id) {
+		Map<String, Object> val = new HashMap<String,Object>();
+		UserInfo user = userRepository.findById(id).get();
+		val.put("user", user);
+		List<News> news = newsRepository.findByUser_Id(user.getId());
+		val.put("blogs", news);
+		return ResponseEntity.ok(val);
 	}
 	
 	// update employee rest api

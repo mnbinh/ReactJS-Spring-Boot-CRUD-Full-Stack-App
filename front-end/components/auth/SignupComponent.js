@@ -7,7 +7,7 @@ const SignupComponent = () => {
         name: 'An',
         email: 'mod@gmail.com',
         username: 'mod',
-        password: 'rrrrrr',
+        password: 'abc123',
         error: '',
         loading: false,
         message: '',
@@ -61,7 +61,7 @@ const SignupComponent = () => {
                         onChange={handleChange('name')}
                         type="text"
                         className="form-control"
-                        placeholder="Type your name"
+                        placeholder="Type your username"
                     />
                 </div>
 

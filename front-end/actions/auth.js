@@ -17,7 +17,7 @@ export const handleResponse = response => {
 };
 
 export const signup = user => {
-    return fetch(`${API}/auth/signin`, {
+    return fetch(`${API}/auth/signup`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',

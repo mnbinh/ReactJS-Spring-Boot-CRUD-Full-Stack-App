@@ -30,8 +30,8 @@ const Card = ({ blog }) => {
             <section>
                 <p className="mark ml-1 pt-2 pb-2">
                     Written by{' '}
-                    <Link href={`/profile/${blog.user.lastName}`}>
-                        <a>{blog.user.lastName}</a>
+                    <Link href={`/profile/${blog.user ? blog.user.id : ''}`}>
+                        <a>{blog.user ? blog.user.lastName : ''}</a>
                     </Link>{' '}
                     | Published {moment(blog.updatedAt).fromNow()}
                 </p>
@@ -56,7 +56,7 @@ const Card = ({ blog }) => {
                 </div>
                 <div className="col-md-8">
                     <section>
-                        <div className="pb-3">{renderHTML(blog.body)}</div>
+                        <div className="pb-3">{renderHTML(blog.excerpt ? blog.excerpt : blog.body)}</div>
                         <Link href={`/news/${blog.id}`}>
                             <a className="btn btn-primary pt-2">Read more</a>
                         </Link>

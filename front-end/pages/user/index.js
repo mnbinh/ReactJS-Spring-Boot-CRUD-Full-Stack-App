@@ -24,7 +24,7 @@ const UserIndex = () => {
                                 </li>
 
                                 <li className="list-group-item">
-                                    <a href="/user">Update profile</a>
+                                    <a href="/user/update">Update profile</a>
                                 </li>
                             </ul>
                         </div>

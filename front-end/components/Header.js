@@ -66,7 +66,7 @@ const Header = () => {
             {isAuth() && isAuth().roles && isAuth().roles.length == 1 && (
               <NavItem>
                 <Link href="/user">
-                  <NavLink>{`${isAuth().firstname} ${isAuth().lastname}'s Dashboard`}</NavLink>
+                  <NavLink>{`${isAuth().firstname ? isAuth().firstname : '' } ${isAuth().lastname ? isAuth().lastname :  isAuth().username}'s Dashboard`}</NavLink>
                 </Link>
               </NavItem>
             )}
@@ -74,7 +74,7 @@ const Header = () => {
             {isAuth() &&  isAuth().roles && isAuth().roles.length ==2 && (
               <NavItem>
                 <Link href="/admin">
-                  <NavLink>{`${isAuth().firstname} ${isAuth().lastname}'s Dashboard`}</NavLink>
+                  <NavLink>{`${isAuth().firstname ? isAuth().firstname : '' } ${isAuth().lastname ? isAuth().lastname :  isAuth().username}'s Dashboard`}</NavLink>
                 </Link>
               </NavItem>
             )}

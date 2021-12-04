@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.javaguides.springboot.exception.ResourceNotFoundException;
@@ -66,6 +68,25 @@ public class EmployeeController {
 		List<News> news = newsRepository.findByUser_Id(user.getId());
 		val.put("blogs", news);
 		return ResponseEntity.ok(val);
+	}
+	
+	@PutMapping("/user/{id}")
+	public ResponseEntity<UserInfo> updateUser(@PathVariable Long id,
+			@RequestParam(value = "firstName", required=false,  defaultValue = "") String firstName, 
+            @RequestParam(value = "lastName", required=false, defaultValue = "") String lastName,
+            @RequestParam(value = "mobile", required=false,  defaultValue = "") String mobile){
+		UserInfo user = userRepository.findById(id).get();
+		if(!StringUtils.isEmpty(firstName)) {
+			user.setFirstName(firstName);
+		}
+		if(!StringUtils.isEmpty(lastName)) {
+			user.setLastName(lastName);
+		}
+		if(!StringUtils.isEmpty(mobile)) {
+			user.setMobile(mobile);
+		}
+		UserInfo userUpdate = userRepository.save(user);
+		return ResponseEntity.ok(userUpdate);
 	}
 	
 	// update employee rest api

@@ -4,9 +4,11 @@ import Router from 'next/router';
 
 const SignupComponent = () => {
     const [values, setValues] = useState({
-        name: 'An',
-        email: 'mod@gmail.com',
-        username: 'mod',
+        firstName: 'Binh',
+        lastName: 'An',
+        name: 'user',
+        email: 'user@gmail.com',
+        username: 'user',
         password: 'abc123',
         error: '',
         loading: false,
@@ -14,7 +16,7 @@ const SignupComponent = () => {
         showForm: true
     });
 
-    const { name, email, password, error, loading, message, showForm } = values;
+    const { firstName,lastName, name,email, password, error, loading, message, showForm } = values;
 
     useEffect(() => {
         isAuth() && Router.push(`/`);
@@ -24,7 +26,7 @@ const SignupComponent = () => {
         e.preventDefault();
         // console.table({ name, email, password, error, loading, message, showForm });
         setValues({ ...values, loading: true, error: false });
-        const user = { name, email, password };
+        const user = { name, email, password ,firstName,lastName};
 
         signup(user).then(data => {
             if (data.error) {
@@ -35,6 +37,8 @@ const SignupComponent = () => {
                     name: '',
                     email: '',
                     password: '',
+                    firstName: '',
+                    lastName:'',
                     error: '',
                     loading: false,
                     message: data.message,
@@ -74,6 +78,24 @@ const SignupComponent = () => {
                         placeholder="Type your email"
                     />
                 </div>
+                <div className="form-group">
+                    <input
+                        value={firstName}
+                        onChange={handleChange('firstName')}
+                        type="firstName"
+                        className="form-control"
+                        placeholder="Type your first name"
+                    />
+                </div>
+                <div className="form-group">
+                    <input
+                        value={lastName}
+                        onChange={handleChange('lastName')}
+                        type="lastName"
+                        className="form-control"
+                        placeholder="ype your last name"
+                    />
+                </div>                                
 
                 <div className="form-group">
                     <input

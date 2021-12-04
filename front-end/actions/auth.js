@@ -118,7 +118,8 @@ export const updateUser = (user, next) => {
     if (process.browser) {
         if (localStorage.getItem('user')) {
             let auth = JSON.parse(localStorage.getItem('user'));
-            auth = user;
+            auth.firstname = user.firstName;
+            auth.lastname = user.lastName;
             localStorage.setItem('user', JSON.stringify(auth));
             next();
         }

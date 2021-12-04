@@ -8,19 +8,18 @@ import { API } from '../../config';
 const ProfileUpdate = () => {
     const [values, setValues] = useState({
         username: '',
-        name: '',
+        firstName: '',
         email: '',
-        about: '',
-        password: '',
+        lastName: '',
+        mobile: '',
         error: false,
         success: false,
         loading: false,
-        photo: '',
         userData: ''
     });
 
     const token = getCookie('token');
-    const { username, name, email, about, password, error, success, loading, photo, userData } = values;
+    const { username, firstName,lastName,mobile, email, error, success, loading, photo, userData } = values;
 
     const init = () => {
         getProfile(token).then(data => {
@@ -29,10 +28,12 @@ const ProfileUpdate = () => {
             } else {
                 setValues({
                     ...values,
-                    username: data.username,
-                    name: data.name,
-                    email: data.email,
-                    about: data.about
+                    userData: new FormData(),
+                    username: data.user.userName,
+                    firstName: data.user.firstName,
+                    email: data.user.email,
+                    lastName: data.user.lastName,
+                    mobile:  data.user.mobile
                 });
             }
         });
@@ -43,11 +44,9 @@ const ProfileUpdate = () => {
     }, []);
 
     const handleChange = name => e => {
-        // console.log(e.target.value);
-        const value = name === 'photo' ? e.target.files[0] : e.target.value;
-        let userFormData = new FormData();
-        userFormData.set(name, value);
-        setValues({ ...values, [name]: value, userData: userFormData, error: false, success: false });
+        // let userFormData = new FormData();
+        userData.set(name, e.target.value);
+        setValues({ ...values, [name]:  e.target.value, error: false, success: false });
     };
 
     const handleSubmit = e => {
@@ -60,11 +59,10 @@ const ProfileUpdate = () => {
                 updateUser(data, () => {
                     setValues({
                         ...values,
-                        username: data.username,
-                        name: data.name,
-                        email: data.email,
-                        about: data.about,
-                        password: '',
+                        username: data.userName,
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        mobile:  data.mobile,
                         success: true,
                         loading: false
                     });
@@ -75,6 +73,7 @@ const ProfileUpdate = () => {
 
     const profileUpdateForm = () => (
         <form onSubmit={handleSubmit}>
+            {/* 
             <div className="form-group">
                 <label className="btn btn-outline-info">
                     Profile photo
@@ -93,14 +92,19 @@ const ProfileUpdate = () => {
                 <label className="text-muted">Email</label>
                 <input onChange={handleChange('email')} type="text" value={email} className="form-control" />
             </div>
+            */}
             <div className="form-group">
-                <label className="text-muted">About</label>
-                <textarea onChange={handleChange('about')} type="text" value={about} className="form-control" />
+                <label className="text-muted">First Name</label>
+                <input onChange={handleChange('firstName')} type="text" value={firstName} className="form-control" />
             </div>
             <div className="form-group">
-                <label className="text-muted">Password</label>
-                <input onChange={handleChange('password')} type="password" value={password} className="form-control" />
+                <label className="text-muted">Last Name</label>
+                <input onChange={handleChange('lastName')} type="text" value={lastName} className="form-control" />
             </div>
+            <div className="form-group">
+                <label className="text-muted">Mobile</label>
+                <input onChange={handleChange('mobile')} type="text" value={mobile} className="form-control" />
+            </div>            
             <div>
                 <button type="submit" className="btn btn-primary">
                     Submit
@@ -131,9 +135,9 @@ const ProfileUpdate = () => {
         <React.Fragment>
             <div className="container">
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="col-md-4" >
                         <img
-                            src={`${API}/user/photo/${username}`}
+                            src={`/static/images/icon.png`}
                             className="img img-fluid img-thumbnail mb-3"
                             style={{ maxHeight: 'auto', maxWidth: '100%' }}
                             alt="user profile"

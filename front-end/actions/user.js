@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
-import { handleResponse } from './auth';
+import { handleResponse , isAuth} from './auth';
 
 export const userPublicProfile = username => {
     return fetch(`${API}/v1/user/${username}`, {
@@ -15,8 +15,8 @@ export const userPublicProfile = username => {
         .catch(err => console.log(err));
 };
 
-export const getProfile = token => {
-    return fetch(`${API}/user/profile`, {
+export const getProfile = (token) => {
+    return fetch(`${API}/v1/user/${isAuth().id}`, {
         method: 'GET',
         headers: {
             Accept: 'application/json',
@@ -30,7 +30,7 @@ export const getProfile = token => {
 };
 
 export const update = (token, user) => {
-    return fetch(`${API}/user/update`, {
+    return fetch(`${API}/v1/user/${isAuth().id}`, {
         method: 'PUT',
         headers: {
             Accept: 'application/json',
